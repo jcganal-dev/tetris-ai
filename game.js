@@ -214,19 +214,23 @@ function gameLoop(timestamp = 0) {
         tick();
         dropCounter = 0;
     }
-    if (best_path===null) {
-        hold()
-        start_AI()
-    } else {
-        if (best_path.length>0) {
-            for(let i=0;i<moves_per_frame&&best_path.length>0;i++) {
-                let movement = best_path.shift()
-                execute_move(movement)
-            }
-        } else {
-            lock_piece()
-            spawn_piece()
+    let ai_mode = $('ai_mode').checked
+    console.log(ai_mode)
+    if(ai_mode) {
+        if (best_path===null) {
+            hold()
             start_AI()
+        } else {
+            if (best_path.length>0) {
+                for(let i=0;i<moves_per_frame&&best_path.length>0;i++) {
+                    let movement = best_path.shift()
+                    execute_move(movement)
+                }
+            } else {
+                lock_piece()
+                spawn_piece()
+                start_AI()
+            }
         }
     }
     update_board_canvas()

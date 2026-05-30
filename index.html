@@ -8,7 +8,10 @@
         background-color: #141414;
         color: white;
     }
-    main {
+    header {
+        text-align: center;
+    }
+    game {
         display: flex;
         flex-direction: row;
         gap: 50px;
@@ -24,22 +27,42 @@
         align-items: center;
         font-size: 20px;
     }
+    .top-bar {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .top-bar span {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+    #ai_mode {
+        height: 10px;
+    }
 </style>
 <html>
     <body>
-        <head>
-            <h1>Score: <span id="score">0</span> <span style="display: none;">(<span id="effeciency">0</span>%)</span></h1>
-        </head>
         <main>
-            <side id="held_container">
-                <label>Held</label>
-                <canvas id="held_canvas" width="160" height="160"></canvas>
-            </side>
-            <canvas id="board" width="400" height="800"></canvas>
-            <side id="next_contaner">
-                <label>Next</label>
-                <canvas id="next_canvas" width="160" height="160"></canvas>
-            </side>
+            <div class="top-bar">
+                <h3>Tetris Game</h3><span><input type="checkbox" id="ai_mode" switch> AI Mode</span>
+            </div>
+            <header>
+                <h1>Score: <span id="score">0</span> <span style="display: none;">(<span id="effeciency">0</span>%)</span></h1>
+            </header>
+            <game>
+                <side id="held_container">
+                    <label>Held</label>
+                    <canvas id="held_canvas" width="160" height="160"></canvas>
+                </side>
+                <canvas id="board" width="400" height="800"></canvas>
+                <side id="next_contaner">
+                    <label>Next</label>
+                    <canvas id="next_canvas" width="160" height="160"></canvas>
+                </side>
+            </game>
         </main>
     </body>
 </html>
