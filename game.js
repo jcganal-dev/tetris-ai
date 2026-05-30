@@ -20,6 +20,7 @@ let active_piece_r = 0
 let held_piece = null
 let held_piece_name = null
 let preview_piece = null
+let used_held_chance = false
 let seven_bag = shuffle(piece_names.slice())
 let game_over = false
 let lines_cleared = 0
@@ -114,6 +115,7 @@ function spawn_piece() {
         game_over = true;
         setTimeout(()=>{location.reload()},1000)
     }
+    used_held_chance = false
     move_preview_along()
 }
 
@@ -168,6 +170,7 @@ function rotate(direction) {
 }
 
 function hold() {
+    if (used_held_chance) return
     if (held_piece===null) {
         held_piece = active_piece
         held_piece_name = active_piece_name
@@ -183,9 +186,11 @@ function hold() {
         move_preview_along()
         active_piece_r = 0
     }
+    used_held_chance = true
 }
 
 window.addEventListener('keydown', (event)=> {
+    let ai_mode = $('ai_mode').checked
     if (game_over || ai_mode) return;
     if (event.key === 'ArrowRight') move(1,0)
     if (event.key === 'ArrowLeft') move(-1,0)

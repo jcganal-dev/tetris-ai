@@ -19,6 +19,7 @@
     #board {
         width: 400px;
         height: 800px;
+        border: solid 1px white;
     }
     side {
         width: 150px;
@@ -26,6 +27,7 @@
         flex-direction: column;
         align-items: center;
         font-size: 20px;
+        gap: 20px;
     }
     .top-bar {
         width: 100%;
@@ -42,12 +44,16 @@
     #ai_mode {
         height: 10px;
     }
+    li {
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
 </style>
 <html>
     <body>
         <main>
             <div class="top-bar">
-                <h3>Tetris Game</h3><span><input type="checkbox" id="ai_mode" switch> AI Mode</span>
+                <h3>Tetris Game</h3><span><input type="checkbox" id="ai_mode" switch checked> AI Mode</span>
             </div>
             <header>
                 <h1>Score: <span id="score">0</span> <span style="display: none;">(<span id="effeciency">0</span>%)</span></h1>
@@ -56,6 +62,16 @@
                 <side id="held_container">
                     <label>Held</label>
                     <canvas id="held_canvas" width="160" height="160"></canvas>
+                    <div>
+                        <h5>Implemented:</h5>
+                        <ul>
+                            <li>Avoid holes</li>
+                            <li>Avoid placing pieces too high</li>
+                            <li>Minimize bumpy placement</li>
+                            <li>Minimize empty pillars</li>
+                            <li>Minimize clearing <4 lines</li>
+                        </ul>
+                    </div>
                 </side>
                 <canvas id="board" width="400" height="800"></canvas>
                 <side id="next_contaner">

@@ -95,7 +95,6 @@ function update_board_canvas() {
 
     let next_piece = shape_dict[seven_bag[0]]
     next.width = next_piece.length*40
-    next.height = next_piece.length*40
     for(let y = 0;y<next_piece.length;y++) {
         for(let x=0;x<next_piece[y].length;x++) {
             if (next_piece[y][x]===1) {
@@ -110,7 +109,6 @@ function update_board_canvas() {
     if (held_piece_name===null) return
     let held_piece = shape_dict[held_piece_name]
     held.width = held_piece.length*40
-    held.height = held_piece.length*40
     for(let y = 0;y<held_piece.length;y++) {
         for(let x=0;x<held_piece[y].length;x++) {
             if (held_piece[y][x]===1) {
