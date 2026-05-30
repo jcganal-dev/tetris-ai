@@ -186,7 +186,7 @@ function hold() {
 }
 
 window.addEventListener('keydown', (event)=> {
-    if (game_over) return;
+    if (game_over || ai_mode) return;
     if (event.key === 'ArrowRight') move(1,0)
     if (event.key === 'ArrowLeft') move(-1,0)
     if (event.key === 'ArrowDown') move(0,1)
@@ -215,7 +215,6 @@ function gameLoop(timestamp = 0) {
         dropCounter = 0;
     }
     let ai_mode = $('ai_mode').checked
-    console.log(ai_mode)
     if(ai_mode) {
         if (best_path===null) {
             hold()
