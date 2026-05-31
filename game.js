@@ -17,7 +17,6 @@ let board = new Array(rows*columns).fill(blank)
 let active_piece = null
 let active_piece_name = null
 let active_piece_r = 0
-let held_piece = null
 let held_piece_name = null
 let preview_piece = null
 let used_held_chance = false
@@ -29,7 +28,14 @@ let best_path = null
 let moves_per_frame = 1
 let lastTime = 0;
 let dropCounter = 0;
-let dropInterval = 250  ;
+let dropInterval = 250;
+let paused = false;
+let ai_mode = 1
+console.log(sessionStorage.getItem(ai_mode))
+if (sessionStorage.getItem('ai_mode')!==null) {
+    ai_mode = parseInt(sessionStorage.getItem('ai_mode'))
+    $(`${ai_mode}`).checked = true
+}
 
 function set_AI_speed(speed) {
     moves_per_frame = speed
@@ -171,14 +177,12 @@ function rotate(direction) {
 
 function hold() {
     if (used_held_chance) return
-    if (held_piece===null) {
-        held_piece = active_piece
+    if (held_piece_name===null) {
         held_piece_name = active_piece_name
         spawn_piece()
     }
     else {
         let temp_name = held_piece_name
-        held_piece = active_piece
         held_piece_name = active_piece_name
         active_piece = pieces[temp_name]
         active_piece_name = temp_name
@@ -190,12 +194,11 @@ function hold() {
 }
 
 window.addEventListener('keydown', (event)=> {
-    let ai_mode = $('ai_mode').checked
-    if (game_over || ai_mode) return;
+    if (game_over || ai_mode!==0) return;
     if (event.key === 'ArrowRight') move(1,0)
     if (event.key === 'ArrowLeft') move(-1,0)
     if (event.key === 'ArrowDown') move(0,1)
-    if (event.key === 'ArrowUp') rotate(2)
+    if (event.key === 'A' || event.key === 'a') rotate(2)
     if (event.key === ' ') {
         while(!check_for_collision(0,1,active_piece[0])[0]) move(0,1);
         lock_piece()
@@ -203,41 +206,42 @@ window.addEventListener('keydown', (event)=> {
     }
     if (event.key === 'C' || event.key === 'c') hold()
     if (event.key === 'Z' || event.key === 'z') rotate(-1)
-    if (event.key === 'X' || event.key === 'x') rotate(1)
+    if (event.key === 'X' || event.key === 'x' || event.key === 'ArrowUp') rotate(1)
 })
 
 function gameLoop(timestamp = 0) {
-    if (game_over) {
-        update_board_canvas()
-        return
-    }
-    const deltaTime = timestamp - lastTime;
-    lastTime = timestamp;
-
-    dropCounter += deltaTime;
-    if (dropCounter > dropInterval) {
-        tick();
-        dropCounter = 0;
-    }
-    let ai_mode = $('ai_mode').checked
-    if(ai_mode) {
-        if (best_path===null) {
-            hold()
-            start_AI()
-        } else {
-            if (best_path.length>0) {
-                for(let i=0;i<moves_per_frame&&best_path.length>0;i++) {
-                    let movement = best_path.shift()
-                    execute_move(movement)
-                }
+    if (!paused) {
+        if (game_over) {
+            update_board_canvas()
+            return
+        }
+        const deltaTime = timestamp - lastTime;
+        lastTime = timestamp;
+    
+        dropCounter += deltaTime;
+        if (dropCounter > dropInterval) {
+            tick();
+            dropCounter = 0;
+        }
+        if(ai_mode!==0) {
+            if (best_path===null) {
+                hold()
+                start_AI(ai_mode)
             } else {
-                lock_piece()
-                spawn_piece()
-                start_AI()
+                if (best_path.length>0) {
+                    for(let i=0;i<moves_per_frame&&best_path.length>0;i++) {
+                        let movement = best_path.shift()
+                        execute_move(movement)
+                    }
+                } else {
+                    lock_piece()
+                    spawn_piece()
+                    start_AI(ai_mode)
+                }
             }
         }
+        update_board_canvas()
     }
-    update_board_canvas()
     requestAnimationFrame(gameLoop);
 }
 
@@ -250,6 +254,14 @@ function tick() {
         move(0,1)
     }
 }
+
+window.addEventListener('blur', () => {
+    paused = true;
+});
+
+window.addEventListener('focus', () => {
+    paused = false;
+});
 
 spawn_piece()
 gameLoop()

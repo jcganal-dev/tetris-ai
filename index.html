@@ -48,12 +48,17 @@
         font-size: 12px;
         margin-bottom: 5px;
     }
+    .ai-mode-ul {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
 </style>
 <html>
     <body>
         <main>
             <div class="top-bar">
-                <h3>Tetris Game</h3><span><input type="checkbox" id="ai_mode" switch checked> AI Mode</span>
+                <h3>Tetris Game</h3>
             </div>
             <header>
                 <h1>Score: <span id="score">0</span> <span style="display: none;">(<span id="effeciency">0</span>%)</span></h1>
@@ -69,7 +74,7 @@
                             <li>Avoid placing pieces too high</li>
                             <li>Minimize bumpy placement</li>
                             <li>Minimize empty pillars</li>
-                            <li>Minimize clearing <4 lines</li>
+                            <li>Minimize clearing less than 4 lines</li>
                         </ul>
                     </div>
                 </side>
@@ -77,6 +82,23 @@
                 <side id="next_contaner">
                     <label>Next</label>
                     <canvas id="next_canvas" width="160" height="160"></canvas>
+                    <div>
+                        <h5>AI Mode:</h5>
+                        <ul class="ai-mode-ul">
+                            <li>
+                                <input type="radio" name="mode" id="3" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id)" checked><label>Current and Hold</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="mode" id="2" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id)"><label>Current then Hold</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="mode" id="1" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id)"><label>Current or Hold</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="mode" id="0" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id)"><label>Off</label>
+                            </li>
+                        </ul>
+                    </div>
                 </side>
             </game>
         </main>
