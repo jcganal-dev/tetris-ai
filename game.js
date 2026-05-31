@@ -30,7 +30,8 @@ let lastTime = 0;
 let dropCounter = 0;
 let dropInterval = 250;
 let paused = false;
-let ai_mode = 1
+let ai_mode = 1;
+let ai_delay = 0;
 if (sessionStorage.getItem('ai_mode')!==null) {
     ai_mode = parseInt(sessionStorage.getItem('ai_mode'))
     $(`${ai_mode}`).checked = true
@@ -241,6 +242,7 @@ function gameLoop(timestamp = 0) {
         }
         update_board_canvas()
     }
+    $('ai_delay').innerHTML = ai_delay
     requestAnimationFrame(gameLoop);
 }
 

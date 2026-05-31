@@ -336,6 +336,7 @@ function start_AI(mode) {
         // Write the completed binary number to the Typed Array once per row
         bit_board[y] = row_bits; 
     }
+    let start_time = performance.now()
     switch (mode) {
         case 1:
             ai_mode_1()
@@ -349,4 +350,5 @@ function start_AI(mode) {
         default:
             break;
     }
+    ai_delay = (performance.now()-start_time).toFixed(2)
 }
