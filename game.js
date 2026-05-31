@@ -31,7 +31,6 @@ let dropCounter = 0;
 let dropInterval = 250;
 let paused = false;
 let ai_mode = 1
-console.log(sessionStorage.getItem(ai_mode))
 if (sessionStorage.getItem('ai_mode')!==null) {
     ai_mode = parseInt(sessionStorage.getItem('ai_mode'))
     $(`${ai_mode}`).checked = true
