@@ -1,11 +1,11 @@
-const multipliers = {
-    holes:   116.6,
-    height:  10.7,
-    bumps:   63.0,
-    pillars: 5.1,
-    clear:   23.5,
-}
-
+// const multipliers = {
+//     holes:   116.6,
+//     height:  10.7,
+//     bumps:   63.0,
+//     pillars: 5.1,
+//     clear:   23.5,
+// }
+const multipliers = { holes: 648.9, height: 11.8, bumps: 312.2, pillars: 27.2, clear: 130.7 }
 function get_column(x,board) {
     let column = []
     for (let y=0;y<rows;y++) {
@@ -43,7 +43,7 @@ function calculate_pillars(board) {
         let highest_right = x+1<columns?get_heighest_block(x+1,board):999
         let highest_block = get_heighest_block(x,board)
         for (let y=rows;y>0;y--) {
-            condition = highest_left-highest_block>3 && highest_right-highest_block>3
+            condition = highest_left-highest_block>1 && highest_right-highest_block>1
             if (condition) {
                 pillar_cost += Math.min(highest_left-highest_block,highest_right-highest_block>3)
                 has_pillar = has_pillar || condition
