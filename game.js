@@ -6,11 +6,11 @@ const piece_names_permanent = piece_names.map(name=>name.toLowerCase())
 const blank = ' '
 const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 const points = {
-    0:0,
-    1:40,
-    2:100,
-    3:300,
-    4:1200
+    0:[0,''],
+    1:[40,'Single'],
+    2:[100,'Double'],
+    3:[300,'Tripple'],
+    4:[1200,'Tetris'],
 }
 let piece_rotations = preload_rotations()
 let board = new Array(rows*columns).fill(blank)
@@ -30,15 +30,22 @@ let lastTime = 0;
 let dropCounter = 0;
 let dropInterval = 250;
 let paused = false;
-let ai_mode = 1;
+let ai_mode = 1 ;
 let ai_delay = 0;
+let pause_on_lost_focus = false
 if (sessionStorage.getItem('ai_mode')!==null) {
     ai_mode = parseInt(sessionStorage.getItem('ai_mode'))
     $(`${ai_mode}`).checked = true
+} else {
+    $(`${ai_mode}`).checked = true
 }
 
-function set_AI_speed(speed) {
-    moves_per_frame = speed
+if (sessionStorage.getItem('mpf')!==null) {
+    moves_per_frame = parseInt(sessionStorage.getItem('mpf'))
+    $('mpf_input').value = moves_per_frame
+    $('mpf').innerHTML = moves_per_frame
+} else {
+    parseInt(sessionStorage.setItem('mpf',moves_per_frame))
 }
 
 function preload_rotations() {
@@ -112,11 +119,15 @@ function spawn_piece() {
     active_piece_name = piece_name
     preview_piece = pieces[piece_name]
     let clears = clear_complete_rows()
-    lines_cleared += clears
-    score += points[clears]
-    $('score').innerHTML = (score).toLocaleString('en-US')
-    let eff = ((score/(lines_cleared*300))*100).toFixed(2)
-    $('effeciency').innerHTML = eff>=0?eff:0;
+    if (clears>0) {
+        lines_cleared += clears
+        score += points[clears][0]
+        $("clear_splash").innerHTML = `<h2 class="pop">${points[clears][1]}</h2>`
+        $('score').innerHTML = (score).toLocaleString('en-US')
+        let eff = ((score/(lines_cleared*300))*100).toFixed(2)
+        $('effeciency').innerHTML = eff>=0?eff:0;
+        $('lines_cleared').innerHTML = lines_cleared>=0?lines_cleared:0;
+    }
     if(check_for_collision(0,0,active_piece[0])[0]) {
         game_over = true;
         setTimeout(()=>{location.reload()},1000)
@@ -135,8 +146,8 @@ function check_for_collision(x_offset,y_offset,rotated_shape) {
         let ty = spy+block[1]
         let target = ty*columns + tx
         if(tx<0) return [true, 'left']
-        if(tx>columns-1) return [true, 'right']
-        if(ty>rows-1) return [true, 'down']
+        if(tx>=columns) return [true, 'right']
+        if(ty>=rows) return [true, 'down']
         if(board[target]!==blank) return [true, 'piece']
     }
     return [false, null]
@@ -242,7 +253,7 @@ function gameLoop(timestamp = 0) {
         }
         update_board_canvas()
     }
-    $('ai_delay').innerHTML = ai_delay
+    $('ai_delay').innerHTML = ai_delay.toFixed(2)
     requestAnimationFrame(gameLoop);
 }
 
@@ -257,11 +268,11 @@ function tick() {
 }
 
 window.addEventListener('blur', () => {
-    paused = true;
+    paused = true && pause_on_lost_focus;
 });
 
 window.addEventListener('focus', () => {
-    paused = false;
+    paused = false && pause_on_lost_focus;
 });
 
 spawn_piece()
