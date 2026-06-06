@@ -78,7 +78,14 @@ function simulate_clear_rows(board_to_check=bit_board) {
 
 function generate_all_paths(piece_name, board_to_check = bit_board) {
     let piece = pieces[piece_name]
-    let queue = [{x:piece[1][0],y:piece[1][1],r:0,path:[],piece:piece_name}]
+    let start_offset = piece[1][1]
+    let start_path = []
+    for (let y=start_offset;y<rows;y++) {
+        if (board_to_check[y+3]!==0) break
+        start_offset+=1
+        start_path.push('D')
+    }
+    let queue = [{x:piece[1][0],y:start_offset,r:0,path:start_path,piece:piece_name}]
     let visited_states = new Set()
     let possible_landings = []
 

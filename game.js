@@ -40,13 +40,13 @@ if (sessionStorage.getItem('ai_mode')!==null) {
     $(`${ai_mode}`).checked = true
 }
 
-if (sessionStorage.getItem('mpf')!==null) {
-    moves_per_frame = parseInt(sessionStorage.getItem('mpf'))
-    $('mpf_input').value = moves_per_frame
-    $('mpf').innerHTML = moves_per_frame
-} else {
-    parseInt(sessionStorage.setItem('mpf',moves_per_frame))
-}
+// if (sessionStorage.getItem('mpf')!==null) {
+//     moves_per_frame = parseInt(sessionStorage.getItem('mpf'))
+//     $('mpf_input').value = moves_per_frame
+//     $('mpf').innerHTML = moves_per_frame
+// } else {
+//     parseInt(sessionStorage.setItem('mpf',moves_per_frame))
+// }
 
 function preload_rotations() {
     let rotations = {}

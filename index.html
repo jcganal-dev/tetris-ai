@@ -71,13 +71,10 @@
     }
     55% {
         transform: scale(1);
-    }
-    75% {
-        transform: scale(0.9);
         opacity: 1;
     }
     100% {
-        transform: scale(0.78);
+        transform: scale(0.8);
         opacity: 0;
     }
     }
@@ -128,8 +125,8 @@
                                 <input type="radio" name="mode" id="0" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id); ai_delay = 0"><label>Off</label>
                             </li>
                         </ul>
-                        <h5 style="margin: 30px 0px 10px 0px;">Moves per frame:</h5>
-                        <input type="range" min="1" id="mpf_input" max="20" value="1" oninput="moves_per_frame = parseInt(this.value);$('mpf').innerHTML=this.value;sessionStorage.setItem('mpf',this.value)" style="width: 110px;"> <label id="mpf">1</label>
+                        <!-- <h5 style="margin: 30px 0px 10px 0px;">Moves per frame:</h5>
+                        <input type="range" min="1" id="mpf_input" max="20" value="1" oninput="moves_per_frame = parseInt(this.value);$('mpf').innerHTML=this.value;sessionStorage.setItem('mpf',this.value)" style="width: 110px;"> <label id="mpf">1</label> -->
                     </div>
                     <h6>Computation time: <label id="ai_delay">0</label>ms</h6>
                 </side>
