@@ -40,14 +40,6 @@ if (sessionStorage.getItem('ai_mode')!==null) {
     $(`${ai_mode}`).checked = true
 }
 
-// if (sessionStorage.getItem('mpf')!==null) {
-//     moves_per_frame = parseInt(sessionStorage.getItem('mpf'))
-//     $('mpf_input').value = moves_per_frame
-//     $('mpf').innerHTML = moves_per_frame
-// } else {
-//     parseInt(sessionStorage.setItem('mpf',moves_per_frame))
-// }
-
 function preload_rotations() {
     let rotations = {}
     for (let n = 0;n<piece_names.length;n++) {
@@ -107,6 +99,22 @@ function lock_piece() {
     })
 }
 
+function restart() {
+    score = 0
+    lines_cleared = 0
+    best_path = null
+    dropCounter = 0
+    game_over = false
+    board = new Array(rows*columns).fill(blank)
+    held_piece_name = null
+    $('score').innerHTML = (score).toLocaleString('en-US')
+    let eff = ((score/(lines_cleared*300))*100).toFixed(2)
+    $('effeciency').innerHTML = eff>=0?eff:0;
+    $('lines_cleared').innerHTML = lines_cleared>=0?lines_cleared:0;
+    spawn_piece()
+    requestAnimationFrame(gameLoop)
+}
+
 function spawn_piece() {
     if (game_over) return;
     active_piece_r = 0
@@ -123,6 +131,7 @@ function spawn_piece() {
         lines_cleared += clears
         score += points[clears][0]
         $("clear_splash").innerHTML = `<h2 class="pop">${points[clears][1]}</h2>`
+        $("score_splash").innerHTML = `<label class="popUp">+${points[clears][0]}</label>`
         $('score').innerHTML = (score).toLocaleString('en-US')
         let eff = ((score/(lines_cleared*300))*100).toFixed(2)
         $('effeciency').innerHTML = eff>=0?eff:0;
@@ -130,7 +139,9 @@ function spawn_piece() {
     }
     if(check_for_collision(0,0,active_piece[0])[0]) {
         game_over = true;
-        setTimeout(()=>{location.reload()},1000)
+        setTimeout(()=>{
+            restart()
+        },1000)
     }
     used_held_chance = false
     move_preview_along()

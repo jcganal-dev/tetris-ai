@@ -1,5 +1,5 @@
 const color_dict = {
-    ' ':'#28282B',
+    ' ':'#333',
     'P' : 'gray',
     'L':'rgba(255, 170, 0, 1)',
     'J':'rgba(0, 0, 255, 1)',
@@ -8,7 +8,7 @@ const color_dict = {
     'Z':'rgba(255, 0, 0, 1)',
     'T':'rgba(153, 0, 255, 1)',
     'I':'rgba(0, 255, 255, 1)',
-    'grid':'#111111'
+    'grid':'#111'
 }
 
 const shape_dict = {
@@ -58,8 +58,11 @@ const next = document.getElementById('next_canvas');
 const next_ctx = next.getContext('2d');
 const held = document.getElementById('held_canvas');
 const held_ctx = held.getContext('2d');
+const grid_size = 4
+
+canvas_ctx.imageSmoothingEnabled = false; 
 canvas_ctx.strokeStyle = color_dict['grid'];
-canvas_ctx.lineWidth = 2;
+canvas_ctx.lineWidth = grid_size;
 for (let i = 0;i<=10;i++) {
     canvas_ctx.moveTo(40*i, 0);
     canvas_ctx.lineTo(40*i, 800);
@@ -69,13 +72,12 @@ for (let i = 0;i<=20;i++) {
     canvas_ctx.lineTo(400, 40*i);
 }
 canvas_ctx.stroke();
-
 function update_board_canvas() {
     for(let y = 0;y<20;y++) {
         for (let x= 0;x<10;x++) {
             let cell = board[((y+4)*columns)+x];
             canvas_ctx.fillStyle = color_dict[game_over&&piece_names.includes(cell.toUpperCase())?'P':cell.toUpperCase()] || color_dict[' '];
-            canvas_ctx.fillRect(x*40+1, y*40+1, 38, 38);
+            canvas_ctx.fillRect(x*40+(grid_size/2), y*40+(grid_size/2), 40-grid_size, 40-grid_size);
         }
     }
 
@@ -83,14 +85,14 @@ function update_board_canvas() {
     canvas_ctx.globalAlpha = 0.3;
     prev_shape.forEach(block => {
         canvas_ctx.fillStyle = color_dict[active_piece_name];
-        canvas_ctx.fillRect((prev_spx+block[0])*40+1, (prev_spy-4+block[1])*40+1, 38, 38);
+        canvas_ctx.fillRect((prev_spx+block[0])*40+(grid_size/2), (prev_spy-4+block[1])*40+(grid_size/2), 40-grid_size, 40-grid_size);
     });
     canvas_ctx.globalAlpha = 1.0;
 
     let [shape, [spx, spy]] = active_piece;
     shape.forEach(block => {
         canvas_ctx.fillStyle = color_dict[game_over?'P':active_piece_name];
-        canvas_ctx.fillRect((spx+block[0])*40+1, (spy-4+block[1])*40+1, 38, 38);
+        canvas_ctx.fillRect((spx+block[0])*40+(grid_size/2), (spy-4+block[1])*40+(grid_size/2), 40-grid_size, 40-grid_size);
     });
 
     let next_piece = shape_dict[seven_bag[0]]
@@ -101,7 +103,7 @@ function update_board_canvas() {
                 next_ctx.fillStyle = color_dict['grid']
                 next_ctx.fillRect(x*40, y*40, 40, 40);
                 next_ctx.fillStyle = color_dict[seven_bag[0]]
-                next_ctx.fillRect(x*40+1, y*40+1, 38, 38);
+                next_ctx.fillRect(x*40+(grid_size/2), y*40+(grid_size/2), 40-grid_size, 40-grid_size);
             }
         }
     }
@@ -115,7 +117,7 @@ function update_board_canvas() {
                 held_ctx.fillStyle = color_dict['grid']
                 held_ctx.fillRect(x*40, y*40, 40, 40);
                 held_ctx.fillStyle = color_dict[held_piece_name]
-                held_ctx.fillRect(x*40+1, y*40+1, 38, 38);
+                held_ctx.fillRect(x*40+(grid_size/2), y*40+(grid_size/2), 40-grid_size, 40-grid_size);
             }
         }
     }

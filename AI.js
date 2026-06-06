@@ -244,7 +244,6 @@ function generate_2_ply(reverse=false) {
         held_piece = active_piece_name
     }
     let possible_ladings_active = generate_all_paths(active_piece)
-    let result_active = simulate_paths(possible_ladings_active,active_piece)
     let min_cost_active = Infinity
     for (let i=0;i<possible_ladings_active.length;i++) {
         let bit_board_copy = bit_board.slice()

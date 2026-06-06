@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <style>
+    @font-face {
+        font-family: "ReturnOfTheBossRegular-E407g";
+        src: url('ReturnOfTheBossRegular-E407g.ttf');
+    }
     body {
-        font-family: monospace;
+        font-family: ReturnOfTheBossRegular-E407g;
         display: flex;
         flex-direction: column;
         align-items: center;
         background-color: #141414;
         color: white;
+        font-size: small;
+        letter-spacing: 1px;
+    }
+    main {
+        border: solid 2px white;
+        background-color: #222222;
+        padding: 0px 40px 20px 40px;
     }
     header {
         text-align: center;
@@ -19,10 +30,12 @@
     #board {
         width: 400px;
         height: 800px;
-        border: solid 1px white;
+        border: solid 2px #111;
+        image-rendering: pixelated;
+        image-rendering: crisp-edges;
     }
     side {
-        width: 150px;
+        width: 175px;
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -53,47 +66,89 @@
         padding: 0;
         margin: 0;
     }
-    .floating {
-        position: fixed;
+    .score_splash {
+        position: absolute;
+        translate: 0px -10px;
+        width: 5ch;
+        height: 30px;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: end;
+    }
+    .clear_splash {
+        position: absolute;
         translate: 0px 150px;
+    }
+    .popUp {
+        position: inherit;
+        animation: popUp 1.2s ease-out forwards;
     }
     .pop {
         animation: popFade 1.2s ease-out forwards;
     }
     @keyframes popFade {
-    0% {
-        transform: scale(0.4);
-        opacity: 0.2;
+        0% {
+            transform: scale(0.4);
+            opacity: 0.2;
+        }
+        5% {
+            transform: scale(1.1);
+            opacity: 1;
+        }
+        55% {
+            transform: scale(1);
+            opacity: 1;
+        }
+        100% {
+            transform: scale(0.8);
+            opacity: 0;
+        }
     }
-    5% {
-        transform: scale(1.1);
-        opacity: 1;
+    @keyframes popUp {
+        0% {
+            translate: 0px 0px;
+            transform: scale(0.4);
+            opacity: 0.2;
+        }
+        5% {
+            scale: 1.1;
+            opacity: 1;
+        }
+        100% {
+            translate: 0px -30px;
+            transform: scale(0.8);
+            opacity: 0;
+        }
     }
-    55% {
-        transform: scale(1);
-        opacity: 1;
-    }
-    100% {
-        transform: scale(0.8);
-        opacity: 0;
-    }
+    .inline-div {
+        display: inline-flex;
+        justify-content: end;
+        width: auto;
     }
 </style>
 <html>
     <body>
         <main>
             <div class="top-bar">
-                <h3>Tetris Game</h3>
+                <h3>Tetris AI Demo</h3>
             </div>
             <header>
-                <h1>Score: <span id="score">0</span> <span style="display: none;">(<span id="effeciency">0</span>%)</span></h1>
+                <h1>Score: 
+                    <div class="inline-div">
+                        <div id="score">0</div> 
+                        <div class="score_splash" id="score_splash"></div>
+                    </div>
+                    <span style="display: none;">(<span id="effeciency">0</span>%)</span>
+                </h1>
+                
                 <h4>Lines Cleared: <span id="lines_cleared">0</span></h4>
             </header>
             <game>
                 <side id="held_container">
                     <label>Held</label>
                     <canvas id="held_canvas" width="160" height="160"></canvas>
-                    <span class="floating" id="clear_splash"></span>
+                    <span class="clear_splash" id="clear_splash"></span>
                     <div>
                         <h5>Implemented:</h5>
                         <ul>
@@ -105,7 +160,7 @@
                         </ul>
                     </div>
                 </side>
-                <canvas id="board" width="400" height="800"></canvas>
+                <canvas id="board" width="400" height="800" tabindex="-1"></canvas>
                 <side id="next_contaner">
                     <label>Next</label>
                     <canvas id="next_canvas" width="160" height="160"></canvas>
@@ -113,20 +168,18 @@
                         <h5>AI Mode:</h5>
                         <ul class="ai-mode-ul">
                             <li>
-                                <input type="radio" name="mode" id="3" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id)" checked><label>Current and Hold</label>
+                                <input type="radio" name="mode" id="3" onchange="set_ai(this.id)" checked><label>Current and Hold</label>
                             </li>
                             <li>
-                                <input type="radio" name="mode" id="2" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id)"><label>Current then Hold</label>
+                                <input type="radio" name="mode" id="2" onchange="set_ai(this.id)"><label>Current then Hold</label>
                             </li>
                             <li>
-                                <input type="radio" name="mode" id="1" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id)"><label>Current or Hold</label>
+                                <input type="radio" name="mode" id="1" onchange="set_ai(this.id)"><label>Current or Hold</label>
                             </li>
                             <li>
-                                <input type="radio" name="mode" id="0" onchange="best_path = null; ai_mode = parseInt(this.id); sessionStorage.setItem('ai_mode',this.id); ai_delay = 0"><label>Off</label>
+                                <input type="radio" name="mode" id="0" onchange="set_ai(this.id); ai_delay = 0"><label>Off</label>
                             </li>
                         </ul>
-                        <!-- <h5 style="margin: 30px 0px 10px 0px;">Moves per frame:</h5>
-                        <input type="range" min="1" id="mpf_input" max="20" value="1" oninput="moves_per_frame = parseInt(this.value);$('mpf').innerHTML=this.value;sessionStorage.setItem('mpf',this.value)" style="width: 110px;"> <label id="mpf">1</label> -->
                     </div>
                     <h6>Computation time: <label id="ai_delay">0</label>ms</h6>
                 </side>
@@ -139,3 +192,11 @@
 <script src="evaluation.js"></script>
 <script src="AI.js"></script>
 <script src="game.js"></script>
+<script>
+    function set_ai(id) {
+        $("board").focus()
+        best_path = null; 
+        ai_mode = parseInt(id); 
+        sessionStorage.setItem('ai_mode',id)
+    }
+</script>
