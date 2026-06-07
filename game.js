@@ -100,6 +100,9 @@ function lock_piece() {
 }
 
 function restart() {
+    if (!game_over) {
+        return
+    }
     score = 0
     lines_cleared = 0
     best_path = null
@@ -109,10 +112,16 @@ function restart() {
     held_piece_name = null
     $('score').innerHTML = (score).toLocaleString('en-US')
     let eff = ((score/(lines_cleared*300))*100).toFixed(2)
-    $('effeciency').innerHTML = eff>=0?eff:0;
     $('lines_cleared').innerHTML = lines_cleared>=0?lines_cleared:0;
     spawn_piece()
     requestAnimationFrame(gameLoop)
+}
+
+function pop_score(parent, child, duration) {
+    parent.appendChild(child)
+    setTimeout(()=>{
+        child.remove()
+    },duration)
 }
 
 function spawn_piece() {
@@ -130,11 +139,12 @@ function spawn_piece() {
     if (clears>0) {
         lines_cleared += clears
         score += points[clears][0]
+        let new_element = document.createElement('label')
+        new_element.classList.add('popUp')
+        new_element.innerHTML = `+${points[clears][0]}`
+        pop_score($("score_splash"),new_element,1000)
         $("clear_splash").innerHTML = `<h2 class="pop">${points[clears][1]}</h2>`
-        $("score_splash").innerHTML = `<label class="popUp">+${points[clears][0]}</label>`
         $('score').innerHTML = (score).toLocaleString('en-US')
-        let eff = ((score/(lines_cleared*300))*100).toFixed(2)
-        $('effeciency').innerHTML = eff>=0?eff:0;
         $('lines_cleared').innerHTML = lines_cleared>=0?lines_cleared:0;
     }
     if(check_for_collision(0,0,active_piece[0])[0]) {
@@ -285,6 +295,13 @@ window.addEventListener('blur', () => {
 window.addEventListener('focus', () => {
     paused = false && pause_on_lost_focus;
 });
+
+function set_ai(id) {
+    $("board").focus()
+    best_path = null; 
+    ai_mode = parseInt(id); 
+    sessionStorage.setItem('ai_mode',id)
+}
 
 spawn_piece()
 gameLoop()

@@ -1,10 +1,11 @@
-const multipliers = {
-    holes: 4274.421058882409,
-    height: 1.32572689322667,
-    clear: 451.3051417309718,
-    bumps: 1040.5531707424786,
-    well: 12.508921757844732
-}
+const multipliers = { holes: 3050.1, height: 22.1, bumps: 1113.3, clear: 170.5, well: 14.1 }
+// const multipliers = {
+//     holes: 4274.421058882409,
+//     height: 1.32572689322667,
+//     clear: 451.3051417309718,
+//     bumps: 1040.5531707424786,
+//     well: 12.508921757844732
+// }
 let bit_board = new Uint16Array(24)
 function check_for_collision_PURE(x, y, r, name, board_to_check=bit_board) {
     let shape = piece_rotations[name][r];
@@ -21,15 +22,7 @@ function check_for_collision_PURE(x, y, r, name, board_to_check=bit_board) {
     return false;
 }
 
-let moves = 0
 function execute_move(instruction) {
-    let limit = Infinity
-    if (moves>=limit) {
-        game_over = true
-        alert(`${limit} moves limit reached! Final score: ${score}`)
-        location.reload()
-    }
-    moves += 1
     if (instruction==='L') {
         move(-1,0)
     }

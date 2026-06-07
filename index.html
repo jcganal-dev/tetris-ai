@@ -46,8 +46,8 @@
         width: 100%;
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
         align-items: center;
+        align-items: left;
     }
     .top-bar span {
         display: flex;
@@ -82,7 +82,7 @@
     }
     .popUp {
         position: inherit;
-        animation: popUp 1.2s ease-out forwards;
+        animation: popUp 0.8s ease-out forwards;
     }
     .pop {
         animation: popFade 1.2s ease-out forwards;
@@ -126,12 +126,24 @@
         justify-content: end;
         width: auto;
     }
+    .title {
+        translate: -5px 2px;
+        text-shadow: 
+            -1px -1px 0px #000,  
+            1px -1px 0px #000,
+            -1px  1px 0px #000,
+            1px  1px 0px #000;
+    }
 </style>
 <html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="./icon.png">
+        <title>Tetris AI</title>
+    </head>
     <body>
         <main>
             <div class="top-bar">
-                <h3>Tetris AI Demo</h3>
+                <img src="./icon.png"><h3 class="title">etris A.I.</h3>
             </div>
             <header>
                 <h1>Score: 
@@ -139,7 +151,6 @@
                         <div id="score">0</div> 
                         <div class="score_splash" id="score_splash"></div>
                     </div>
-                    <span style="display: none;">(<span id="effeciency">0</span>%)</span>
                 </h1>
                 
                 <h4>Lines Cleared: <span id="lines_cleared">0</span></h4>
@@ -160,7 +171,7 @@
                         </ul>
                     </div>
                 </side>
-                <canvas id="board" width="400" height="800" tabindex="-1"></canvas>
+                <canvas id="board" width="200" height="400" tabindex="-1"></canvas>
                 <side id="next_contaner">
                     <label>Next</label>
                     <canvas id="next_canvas" width="160" height="160"></canvas>
@@ -189,14 +200,5 @@
 </html>
 <script src="renderer.js"></script>
 <script src="blocks.js"></script>
-<script src="evaluation.js"></script>
 <script src="AI.js"></script>
 <script src="game.js"></script>
-<script>
-    function set_ai(id) {
-        $("board").focus()
-        best_path = null; 
-        ai_mode = parseInt(id); 
-        sessionStorage.setItem('ai_mode',id)
-    }
-</script>

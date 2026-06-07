@@ -58,18 +58,21 @@ const next = document.getElementById('next_canvas');
 const next_ctx = next.getContext('2d');
 const held = document.getElementById('held_canvas');
 const held_ctx = held.getContext('2d');
-const grid_size = 4
+const grid_size = 2
+const block_side = 20
+const prev_block_side = 40
+const prev_grid_size = 4
 
 canvas_ctx.imageSmoothingEnabled = false; 
 canvas_ctx.strokeStyle = color_dict['grid'];
 canvas_ctx.lineWidth = grid_size;
 for (let i = 0;i<=10;i++) {
-    canvas_ctx.moveTo(40*i, 0);
-    canvas_ctx.lineTo(40*i, 800);
+    canvas_ctx.moveTo(block_side*i, 0);
+    canvas_ctx.lineTo(block_side*i, 800);
 }
 for (let i = 0;i<=20;i++) {
-    canvas_ctx.moveTo(0, 40*i);
-    canvas_ctx.lineTo(400, 40*i);
+    canvas_ctx.moveTo(0, block_side*i);
+    canvas_ctx.lineTo(400, block_side*i);
 }
 canvas_ctx.stroke();
 function update_board_canvas() {
@@ -77,7 +80,7 @@ function update_board_canvas() {
         for (let x= 0;x<10;x++) {
             let cell = board[((y+4)*columns)+x];
             canvas_ctx.fillStyle = color_dict[game_over&&piece_names.includes(cell.toUpperCase())?'P':cell.toUpperCase()] || color_dict[' '];
-            canvas_ctx.fillRect(x*40+(grid_size/2), y*40+(grid_size/2), 40-grid_size, 40-grid_size);
+            canvas_ctx.fillRect(x*block_side+(grid_size/2), y*block_side+(grid_size/2), block_side-grid_size, block_side-grid_size);
         }
     }
 
@@ -85,39 +88,39 @@ function update_board_canvas() {
     canvas_ctx.globalAlpha = 0.3;
     prev_shape.forEach(block => {
         canvas_ctx.fillStyle = color_dict[active_piece_name];
-        canvas_ctx.fillRect((prev_spx+block[0])*40+(grid_size/2), (prev_spy-4+block[1])*40+(grid_size/2), 40-grid_size, 40-grid_size);
+        canvas_ctx.fillRect((prev_spx+block[0])*block_side+(grid_size/2), (prev_spy-4+block[1])*block_side+(grid_size/2), block_side-grid_size, block_side-grid_size);
     });
     canvas_ctx.globalAlpha = 1.0;
 
     let [shape, [spx, spy]] = active_piece;
     shape.forEach(block => {
         canvas_ctx.fillStyle = color_dict[game_over?'P':active_piece_name];
-        canvas_ctx.fillRect((spx+block[0])*40+(grid_size/2), (spy-4+block[1])*40+(grid_size/2), 40-grid_size, 40-grid_size);
+        canvas_ctx.fillRect((spx+block[0])*block_side+(grid_size/2), (spy-4+block[1])*block_side+(grid_size/2), block_side-grid_size, block_side-grid_size);
     });
 
     let next_piece = shape_dict[seven_bag[0]]
-    next.width = next_piece.length*40
+    next.width = next_piece.length*prev_block_side
     for(let y = 0;y<next_piece.length;y++) {
         for(let x=0;x<next_piece[y].length;x++) {
             if (next_piece[y][x]===1) {
                 next_ctx.fillStyle = color_dict['grid']
-                next_ctx.fillRect(x*40, y*40, 40, 40);
+                next_ctx.fillRect(x*prev_block_side, y*prev_block_side, prev_block_side, prev_block_side);
                 next_ctx.fillStyle = color_dict[seven_bag[0]]
-                next_ctx.fillRect(x*40+(grid_size/2), y*40+(grid_size/2), 40-grid_size, 40-grid_size);
+                next_ctx.fillRect(x*prev_block_side+(prev_grid_size/2), y*prev_block_side+(prev_grid_size/2), prev_block_side-prev_grid_size, prev_block_side-prev_grid_size);
             }
         }
     }
 
     if (held_piece_name===null) return
     let held_piece = shape_dict[held_piece_name]
-    held.width = held_piece.length*40
+    held.width = held_piece.length*prev_block_side
     for(let y = 0;y<held_piece.length;y++) {
         for(let x=0;x<held_piece[y].length;x++) {
             if (held_piece[y][x]===1) {
                 held_ctx.fillStyle = color_dict['grid']
-                held_ctx.fillRect(x*40, y*40, 40, 40);
+                held_ctx.fillRect(x*prev_block_side, y*prev_block_side, prev_block_side, prev_block_side);
                 held_ctx.fillStyle = color_dict[held_piece_name]
-                held_ctx.fillRect(x*40+(grid_size/2), y*40+(grid_size/2), 40-grid_size, 40-grid_size);
+                held_ctx.fillRect(x*prev_block_side+(prev_grid_size/2), y*prev_block_side+(prev_grid_size/2), prev_block_side-prev_grid_size, prev_block_side-prev_grid_size);
             }
         }
     }
