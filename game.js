@@ -30,7 +30,7 @@ let lastTime = 0;
 let dropCounter = 0;
 let dropInterval = 250;
 let paused = false;
-let ai_mode = 1 ;
+let ai_mode = 3;
 let ai_delay = 0;
 let pause_on_lost_focus = false
 if (sessionStorage.getItem('ai_mode')!==null) {
