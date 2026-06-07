@@ -33,12 +33,6 @@ let paused = false;
 let ai_mode = 3;
 let ai_delay = 0;
 let pause_on_lost_focus = false
-if (sessionStorage.getItem('ai_mode')!==null) {
-    ai_mode = parseInt(sessionStorage.getItem('ai_mode'))
-    $(`${ai_mode}`).checked = true
-} else {
-    $(`${ai_mode}`).checked = true
-}
 
 function preload_rotations() {
     let rotations = {}
@@ -300,7 +294,6 @@ function set_ai(id) {
     $("board").focus()
     best_path = null; 
     ai_mode = parseInt(id); 
-    sessionStorage.setItem('ai_mode',id)
 }
 
 spawn_piece()
